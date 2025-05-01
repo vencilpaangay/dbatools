@@ -152,6 +152,18 @@ function Get-DbaBuild {
             if (!$ServicePack) {
                 $ServicePack = 'RTM'
             }
+
+            # Normalize common formats
+            $ServicePack = $ServicePack.Trim()
+
+            # Handle 'Azure Connect Pack + GDR' explicitly
+            if ($ServicePack -match 'Azure\s+Connect\s+Pack\s*\+\s*GDR') {
+            $ServicePack = 'Azure Connect Pack + GDR'
+            }
+            # Handle 'SPX + GDR'
+            if ($ServicePack -match '^(SP)?\s*(\d+)\s*\+\s*GDR$') {
+            $ServicePack = "SP$($Matches[2]) + GDR"
+            }        
             if ($ServicePack -match '^(SP)?\s*(\d+)$') {
                 if ($Matches[2] -eq '0') {
                     $ServicePack = 'RTM'
